@@ -1,39 +1,77 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class Othello extends JPanel {
 	
-	JPanel pnlCenter = new JPanel();
-	JPanel pnlEast = new JPanel();
-	JPanel[][] box = new JPanel[4][4]; 
-	JButton btn = new JButton();
+	private JPanel pnlCenter = new JPanel();
+	private JPanel pnlEast = new JPanel();
+	private JPanel pnlEastNorth = new JPanel();
+	private JPanel pnlEastSouth = new JPanel();
+	private JPanel pnlEastCenter = new JPanel();
+	private JButton btnReset = new JButton("Reset");
+	private JPanel[][] box = new JPanel[4][4];
+	private JLabel lblOthello = new JLabel("OTHELLO");
+	private JLabel playerScore = new JLabel("X");
+	private JLabel comScore = new JLabel("Y");
+	private ImageIcon imagePlayer;
+	private ImageIcon imageCom;
+	private JLabel jblImagePlayer;
+	private JLabel jblImageCom;
+	private int [][] boxOwner = new int[4][4];
+	private final int EMPTY = 0, PLAYER = 1, COM = 2;
 	
 	public Othello() {
+		
 		setPreferredSize(new Dimension(600,400));
 		setLayout(new BorderLayout());
-		
+		lblOthello.setFont(new Font("Serif",Font.PLAIN,40));
 		//Panel center
 		pnlCenter.setLayout(new GridLayout(4,4,2,2));
-		pnlCenter.setBackground(Color.RED);
+		pnlCenter.setBackground(new Color(0x0066cc));
 		
-		//testa knapp
-		btn.addActionListener(new AI());
-		pnlEast.add(btn);
-		
+		//Panel East
+		pnlEast.setLayout(new BorderLayout());
 		pnlEast.setBackground(Color.GREEN);
 		pnlEast.setPreferredSize(new Dimension(200,400));
-		add(pnlEast, BorderLayout.EAST);
-		add(pnlCenter, BorderLayout.CENTER);
 		
+		//Panel East North. Contaning OTHELLO label
+		pnlEastNorth.setPreferredSize(new Dimension(200,100));
+//		pnlEastNorth.setBackground(Color.GRAY);
+		
+		//Panel East South. Containg RESET-button
+		pnlEastSouth.setPreferredSize(new Dimension(200,100));
+//		pnlEastSouth.setBackground(Color.GRAY);
+		
+		//Panel East Center. Containing Scores
+		pnlEastCenter.setLayout(new GridLayout(2,2));
+		imagePlayer = new ImageIcon("src/BlackCircle.png");
+		imageCom = new ImageIcon("src/WhiteCircle.png");
+		jblImagePlayer = new JLabel(imagePlayer);
+		jblImageCom = new JLabel(imageCom);
+		pnlEastCenter.add(jblImagePlayer);
+		pnlEastCenter.add(playerScore);
+		pnlEastCenter.add(jblImageCom);
+		pnlEastCenter.add(comScore);
+		pnlEastSouth.add(btnReset);
+		
+		//adding to Panels
+		pnlEast.add(pnlEastNorth, BorderLayout.NORTH);
+		pnlEast.add(pnlEastSouth, BorderLayout.SOUTH);
+		pnlEast.add(pnlEastCenter, BorderLayout.CENTER);
+		pnlEastNorth.add(lblOthello);
 		//add 16 JPanel into Gridlayout
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
@@ -41,6 +79,34 @@ public class Othello extends JPanel {
 				pnlCenter.add(box[i][j]);
 			}
 		}
+		add(pnlEast, BorderLayout.EAST);
+		add(pnlCenter, BorderLayout.CENTER);
+		
+		btnReset.addActionListener(new AI());
+	}
+	
+	//paint out window with current score
+	public void render() {
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				if(boxOwner[i][j] == 0) {
+					box[i][j].setBackground(new Color(00,99,33));
+				} else if(boxOwner[i][j] == 1) {
+					box[i][j].setBackground(Color.BLACK);
+				} else {
+					box[i][j].setBackground(Color.WHITE);
+				}
+			}
+		}
+	}
+	public void reset() {
+		boxOwner = new int[4][4];
+		boxOwner[1][1] = PLAYER;
+		boxOwner[2][2] = PLAYER;
+		boxOwner[1][2] = COM;
+		boxOwner[2][1] = COM;
+		render();
+		
 	}
 	
 	public void changeColor(int row, int col) {
@@ -52,11 +118,8 @@ public class Othello extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			if(e.getSource() == btn) {
-				Random rand = new Random();
-				int i = rand.nextInt(4);
-				int j = rand.nextInt(4);
-				box[i][j].setBackground(new Color((int)(Math.random() * 0x1000000)));
+			if(e.getSource() == btnReset) {
+				reset();
 			}
 		}
 	}
