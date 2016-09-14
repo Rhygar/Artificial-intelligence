@@ -65,6 +65,9 @@ public class Othello extends JPanel {
 		pnlEastCenter.add(playerScore);
 		pnlEastCenter.add(jblImageCom);
 		pnlEastCenter.add(comScore);
+		
+		//ResetButton
+		btnReset.addActionListener(new AI());
 		pnlEastSouth.add(btnReset);
 		
 		//adding to Panels
@@ -82,7 +85,7 @@ public class Othello extends JPanel {
 		add(pnlEast, BorderLayout.EAST);
 		add(pnlCenter, BorderLayout.CENTER);
 		
-		btnReset.addActionListener(new AI());
+		
 	}
 	
 	//paint out window with current score
@@ -105,8 +108,7 @@ public class Othello extends JPanel {
 		boxOwner[2][2] = PLAYER;
 		boxOwner[1][2] = COM;
 		boxOwner[2][1] = COM;
-		render();
-		
+		render();	
 	}
 	
 	public void changeColor(int row, int col) {
