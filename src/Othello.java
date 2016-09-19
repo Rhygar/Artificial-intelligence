@@ -81,7 +81,7 @@ public class Othello extends JPanel {
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				box[i][j] = new JPanel();
-				box[i][j].addMouseListener(new ML()); //adding mouselistener to each panel
+				box[i][j].addMouseListener(new ML(i,j)); //adding mouselistener to each panel
 				pnlCenter.add(box[i][j]);
 			}
 		}
@@ -123,8 +123,10 @@ public class Othello extends JPanel {
 		box[row][col].setBackground(Color.BLACK);
 	}
 	
-	public void playerMadeMove(JPanel panel) {
+	public void playerMadeMove(int row, int col) {
 //		panel.setBackground(Color.WHITE);
+		System.out.println("Player put on ROW " + row + " COL " + col);
+		
 	}
 	
 	private class AI implements ActionListener {
@@ -140,6 +142,11 @@ public class Othello extends JPanel {
 	
 	private class ML implements MouseListener {
 
+		private int i,j;
+		private ML(int row, int col) {
+			this.i = row;
+			this.j = col;
+		}
 		@Override
 		/*
 		 * When empty box is clicked, do some AI stuff 
@@ -152,7 +159,7 @@ public class Othello extends JPanel {
 				System.out.println("You clicked on WHITE");
 			} else {
 				//empty box was clicked. Do some stuff
-				playerMadeMove(panel);
+				playerMadeMove(i,j);
 			}
 		}
 		@Override
