@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -21,7 +23,7 @@ public class Othello extends JPanel {
 	private JPanel pnlEastNorth = new JPanel();
 	private JPanel pnlEastSouth = new JPanel();
 	private JPanel pnlEastCenter = new JPanel();
-	private JButton btnReset = new JButton("Reset");
+	private JButton btnReset = new JButton("START");
 	private JPanel[][] box = new JPanel[4][4];
 	private JLabel lblOthello = new JLabel("OTHELLO");
 	private JLabel playerScore = new JLabel("X");
@@ -79,16 +81,17 @@ public class Othello extends JPanel {
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				box[i][j] = new JPanel();
+				box[i][j].addMouseListener(new ML()); //adding mouselistener to each panel
 				pnlCenter.add(box[i][j]);
 			}
 		}
 		add(pnlEast, BorderLayout.EAST);
-		add(pnlCenter, BorderLayout.CENTER);
-		
-		
+		add(pnlCenter, BorderLayout.CENTER);		
 	}
 	
-	//paint out window with current score
+	/**
+	 * This method renders the board with updated view
+	 */
 	public void render() {
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
@@ -102,17 +105,26 @@ public class Othello extends JPanel {
 			}
 		}
 	}
+	
+	/**
+	 * This method restarts the game. 
+	 */
 	public void reset() {
 		boxOwner = new int[4][4];
 		boxOwner[1][1] = PLAYER;
 		boxOwner[2][2] = PLAYER;
 		boxOwner[1][2] = COM;
 		boxOwner[2][1] = COM;
+		btnReset.setText("Reset");
 		render();	
 	}
 	
 	public void changeColor(int row, int col) {
 		box[row][col].setBackground(Color.BLACK);
+	}
+	
+	public void playerMadeMove(JPanel panel) {
+//		panel.setBackground(Color.WHITE);
 	}
 	
 	private class AI implements ActionListener {
@@ -124,6 +136,33 @@ public class Othello extends JPanel {
 				reset();
 			}
 		}
+	}
+	
+	private class ML implements MouseListener {
+
+		@Override
+		/*
+		 * When empty box is clicked, do some AI stuff 
+		 */
+		public void mouseClicked(MouseEvent e) {
+			JPanel panel = (JPanel) e.getSource();
+			if(panel.getBackground().equals(Color.BLACK)) {
+				System.out.println("You clicked on black");
+			} else if(panel.getBackground().equals(Color.WHITE)) {
+				System.out.println("You clicked on WHITE");
+			} else {
+				//empty box was clicked. Do some stuff
+				playerMadeMove(panel);
+			}
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {}
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+		@Override
+		public void mouseEntered(MouseEvent e) {}
+		@Override
+		public void mouseExited(MouseEvent e) {}
 	}
 
 	public static void main(String[] args) {
