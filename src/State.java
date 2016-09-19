@@ -42,4 +42,19 @@ public class State {
 		return comScore - playerScore;
 	}
 	
+	public State updateState(State state, int row, int col ){
+		this.state = state.getState();
+		return null;
+		
+	}
+	
+	public State playerMove(State state, int row, int col){
+		return null;
+		
+	}
+	
+	public State comMove(State state, int row, int col){
+		State tempState = new State(state.getState());
+		return tempState;
+	}
 }

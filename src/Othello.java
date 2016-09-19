@@ -111,15 +111,9 @@ public class Othello extends JPanel {
 	 * This method restarts the game. 
 	 */
 	public void reset() {
-		boxOwner = new int[4][4];
-		boxOwner[1][1] = PLAYER;
-		boxOwner[2][2] = PLAYER;
-		boxOwner[1][2] = COM;
-		boxOwner[2][1] = COM;
 		btnReset.setText("Reset");
 		state = new State();
 		render();
-		System.out.print(state.getScore());
 	}
 	
 	public void changeColor(int row, int col) {
