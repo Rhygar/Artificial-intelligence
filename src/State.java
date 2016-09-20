@@ -26,8 +26,14 @@ public class State {
 		this.board = board;
 	}
 
+	/**
+	 * Method to see who is the leader. 
+	 * Positive means COM is leader, negative return means Human is leader.
+	 * Result 0 means tie
+	 * @return
+	 */
 	public int getScore(){
-		int counter = 0;
+		int score = 0;
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
 				if(board[i][j] != 0) {
@@ -35,7 +41,7 @@ public class State {
 				}
 			}
 		}
-		return counter;
+		return score;
 	}
 	
 	public State updateState(State state, int row, int col ){
