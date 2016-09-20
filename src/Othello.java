@@ -15,7 +15,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
+/**
+ * A game of Othello.
+ * 
+ * Player = 1 & COM = -1
+ * @author David Tran & John Tengvall
+ *
+ */
 public class Othello extends JPanel {
 	
 	private JPanel pnlCenter = new JPanel();
@@ -32,8 +38,7 @@ public class Othello extends JPanel {
 	private ImageIcon imageCom;
 	private JLabel jblImagePlayer;
 	private JLabel jblImageCom;
-	private int [][] boxOwner = new int[4][4];
-	private final int EMPTY = 0, PLAYER = 1, COM = 2;
+	private final int EMPTY = 0, PLAYER = 1, COM = -1;
 	private State state;
 	public Othello() {
 		
@@ -93,12 +98,11 @@ public class Othello extends JPanel {
 	 * This method renders the board with updated view
 	 */
 	public void render() {
-		boxOwner = state.getState();
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				if(state.getOwner(i, j)== 0) {
 					box[i][j].setBackground(new Color(00,99,33));
-				} else if(state.getOwner(i, j) == 1) {
+				} else if(state.getOwner(i, j) == PLAYER) {
 					box[i][j].setBackground(Color.BLACK);
 				} else {
 					box[i][j].setBackground(Color.WHITE);
@@ -114,6 +118,7 @@ public class Othello extends JPanel {
 		btnReset.setText("Reset");
 		state = new State();
 		render();
+		System.out.println(state.getScore());
 	}
 	
 	public void changeColor(int row, int col) {

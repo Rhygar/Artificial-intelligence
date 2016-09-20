@@ -1,49 +1,45 @@
 
 public class State {
 	
-	private int[][] state = {{0,0,0,0},
-							 {0,1,2,0},
-							 {0,2,1,0},
+	private int[][] board = {{0,0,0,0},
+							 {0,1,-1,0},
+							 {0,-1,1,0},
 							 {0,0,0,0}
 	};
 	
-	public State(int[][] state) {
-		this.state = state;
+	public State(int[][] board) {
+		this.board = board;
 	}
 	
 	public State() {
 		// TODO Auto-generated constructor stub
 	}
 	public int getOwner(int row,int col){
-		return state[row][col];
+		return board[row][col];
 	}
 
-	public int[][] getState() {
-		return this.state;
+	public int[][] getBoard() {
+		return this.board;
 	}
 	
-	public void setState(int[][] state) {
-		this.state = state;
+	public void setBoard(int[][] board) {
+		this.board = board;
 	}
 
 	public int getScore(){
-		int playerScore = 0;
-		int comScore = 0;
+		int counter = 0;
 		for(int i = 0; i < 4; i++){
 			for(int j = 0; j < 4; j++){
-				if(state[i][j] == 1){
-					playerScore++;
-				}
-				else if(state[i][j] == 2){
-					comScore++;
+				if(board[i][j] != 0) {
+					counter += board[i][j];
 				}
 			}
 		}
-		return comScore - playerScore;
+		return counter;
 	}
 	
 	public State updateState(State state, int row, int col ){
-		this.state = state.getState();
+		this.board = state.getBoard();
 		return null;
 		
 	}
@@ -54,7 +50,7 @@ public class State {
 	}
 	
 	public State comMove(State state, int row, int col){
-		State tempState = new State(state.getState());
-		return tempState;
+		State tempBoard = new State(state.getBoard());
+		return tempBoard;
 	}
 }
