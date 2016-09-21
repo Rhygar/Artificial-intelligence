@@ -7,14 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Random;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  * A game of Othello.
@@ -107,7 +104,7 @@ public class Othello extends JPanel {
 		int humanScore = 0, comScore = 0;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				if (state.getOwner(i, j) == 0) {
+				if (state.getOwner(i, j) == EMPTY) {
 					box[i][j].setBackground(new Color(00, 99, 33));
 				} else if (state.getOwner(i, j) == HUMAN) {
 					box[i][j].setBackground(Color.BLACK);
@@ -149,7 +146,6 @@ public class Othello extends JPanel {
 	}
 
 	private class AI implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -162,7 +158,6 @@ public class Othello extends JPanel {
 	private class ML implements MouseListener {
 
 		private int i, j;
-
 		private ML(int row, int col) {
 			this.i = row;
 			this.j = col;
@@ -200,7 +195,13 @@ public class Othello extends JPanel {
 		public void mouseExited(MouseEvent e) {
 		}
 	}
-	
+	/**
+	 * This method calls checkBoard function to check all 8 possible directions
+	 * @param state
+	 * @param placedRow
+	 * @param placedCol
+	 * @param player
+	 */
 	public void checkAllDirections(State state, int placedRow, int placedCol, int player) {
 		int[] dirArray = {0,-1,-1,-1,0,1,1,1,0,-1};
 		for(int i = 0; i < 8; i++) {
@@ -229,6 +230,7 @@ public class Othello extends JPanel {
 		int pipsToTurn = 0;
 
 		while (checkRow >= 0 && checkCol <= 3 && checkCol >= 0 && checkRow <= 3	&& board[checkRow][checkCol] != 0) {
+			//if found any of same color and found opponent pieces in between
 			if (board[checkRow][checkCol] == player && foundOpponentPiece) {
 				for (int i = 1; i <= pipsToTurn; i++) {
 					board[checkRow - i * rowDir][checkCol - i * colDir] = player;
@@ -244,10 +246,8 @@ public class Othello extends JPanel {
 			checkRow += rowDir;
 			checkCol += colDir;
 		}
-
 		state.setBoard(board);
 		return state;
-
 	}
 
 	public static void main(String[] args) {
