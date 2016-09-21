@@ -1,6 +1,9 @@
 
 public class State {
 	
+	private final int HUMAN = 1,COM = -1;
+	
+	
 	private int[][] board = {{0,0,0,0},
 							 {0,1,-1,0},
 							 {0,-1,1,0},
@@ -58,5 +61,35 @@ public class State {
 	public State comMove(State state, int row, int col){
 		State tempBoard = new State(state.getBoard());
 		return tempBoard;
+	}
+	
+	
+	public State checkBoard(State state, int placedRow, int placedCol,int rowDir, int colDir, int player){
+		
+		int checkRow = placedRow + rowDir;
+		int checkCol = placedCol + colDir;
+		int[][] board = state.getBoard();
+		board[placedRow][placedCol] = player; 
+		boolean foundOpponentPiece = false;
+		int pipsToTurn = 0;
+		
+		
+		while(checkRow >= 0 && checkCol <= 3 && checkCol >= 0 && checkRow <= 3 && board[checkRow][checkCol] != 0){
+			if(board[checkRow][checkCol] == player && foundOpponentPiece){
+				 for(int i = 1; i<=pipsToTurn;i++){
+					 board[checkRow-i*rowDir][checkCol-i*colDir] = player;
+				 }
+				 return new State(board);
+			}
+			else{ 
+				foundOpponentPiece = true;
+				pipsToTurn++;
+			}
+			checkRow += rowDir;
+			checkCol += colDir;
+		}
+		
+		return new State(board);
+		
 	}
 }
