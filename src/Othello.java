@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 /**
  * A game of Othello.
  * 
- * Player = 1 & COM = -1
+ * Player = -1 & COM = 1
  * 
  * @author David Tran & John Tengvall
  *
