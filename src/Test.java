@@ -3,13 +3,14 @@ import java.util.Arrays;
 
 public class Test {
 	
+	
 	public int alphaBetaSearch(State state) {
-		int action = maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		int action = maxValue(state,0,Integer.MIN_VALUE, Integer.MAX_VALUE);
 		
 		return 0;
 	}
 	
-	public int maxValue(State state, int a, int b) {
+	public int maxValue(State state,int depth, int alpha, int beta) {
 		//IF TERMINAL TEST bla bla bla
 		
 		int returnValue = Integer.MIN_VALUE;
@@ -18,11 +19,11 @@ public class Test {
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				if(board[i][j] == 0) {
-					returnValue = Math.max(returnValue, minValue(new State(),a,b));  //change new State to call result method
-					if(returnValue >= b) {
+					returnValue = Math.max(returnValue, minValue(new State(),depth + 1,alpha,beta) );  //change new State to call result method
+					if(returnValue >= beta) {
 						return returnValue;
 					}
-					a = Math.max(a, returnValue);
+					alpha = Math.max(alpha, returnValue);
 				}
 			}
 		}
@@ -30,7 +31,7 @@ public class Test {
 		return returnValue;
 	}
 	
-	public int minValue(State state, int a, int b) {
+	public int minValue(State state,int depth, int alpha, int beta) {
 		//IF TERMINAL TEST bla bla bla
 		int returnValue = Integer.MAX_VALUE;
 		int[][] board = state.getBoard();
@@ -38,11 +39,11 @@ public class Test {
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				if(board[i][j] == 0) {
-					returnValue = Math.min(returnValue, maxValue(new State(),a,b));  //change new State to call result method
-					if(returnValue <= a) {
+					returnValue = Math.min(returnValue, maxValue(new State(),depth + 1,alpha,beta));  //change new State to call result method
+					if(returnValue <= alpha) {
 						return returnValue;
 					}
-					b = Math.min(b, returnValue);
+					beta = Math.min(beta, returnValue);
 				}
 			}
 		}
@@ -77,10 +78,5 @@ public class Test {
 		} else {
 			System.out.println("NOT same");
 		}
-		
-		int x = 8;
-		x = sum(x,0);
-		System.out.println(x);
-	
 	}
 }
