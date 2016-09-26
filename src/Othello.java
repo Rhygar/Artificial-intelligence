@@ -41,7 +41,7 @@ public class Othello extends JPanel {
 	private final int EMPTY = 0, HUMAN = -1, COM = 1;
 	private State state;
 	private int currentPlayer = -1;
-	private ComMove move = new ComMove();
+	private ComMove2 move = new ComMove2();
 
 	public Othello() {
 
