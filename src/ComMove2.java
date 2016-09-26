@@ -4,7 +4,7 @@ public class ComMove2 {
 	int depth = 0;
 	final int HUMAN = -1, COM = 1, EMPTY = 0;
 	int rowColIndex, startDjup = 0;
-	final int DJUP = 4;
+	final int DJUP = 0;
 	
 	public int alphaBetaSearch(State state) {
 		
