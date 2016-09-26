@@ -3,11 +3,12 @@ import java.util.Arrays;
 
 public class Test {
 	
+	int[] rowColMove = new int[2];
 	
-	public int alphaBetaSearch(State state) {
+	public int[] alphaBetaSearch(State state) {
 		int action = maxValue(state,0,Integer.MIN_VALUE, Integer.MAX_VALUE);
 		
-		return 0;
+		return rowColMove;
 	}
 	
 	public int maxValue(State state,int depth, int alpha, int beta) {

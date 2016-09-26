@@ -144,57 +144,7 @@ public class Othello extends JPanel {
 		
 
 	}
-
-	private class AI implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			if (e.getSource() == btnReset) {
-				reset();
-			}
-		}
-	}
-
-	private class ML implements MouseListener {
-
-		private int i, j;
-		private ML(int row, int col) {
-			this.i = row;
-			this.j = col;
-		}
-
-		@Override
-		/*
-		 * When empty box is clicked, do some AI stuff
-		 */
-		public void mouseClicked(MouseEvent e) {
-			JPanel panel = (JPanel) e.getSource();
-			if (panel.getBackground().equals(Color.BLACK)) {
-				System.out.println("You clicked on black");
-			} else if (panel.getBackground().equals(Color.WHITE)) {
-				System.out.println("You clicked on WHITE");
-			} else {
-				// empty box was clicked. Do some stuff
-				playerMadeMove(i, j);
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-	}
+	
 	/**
 	 * This method calls checkBoard function to check all 8 possible directions
 	 * @param state
@@ -248,6 +198,57 @@ public class Othello extends JPanel {
 		}
 		state.setBoard(board);
 		return state;
+	}
+	
+	private class ML implements MouseListener {
+
+		private int i, j;
+		private ML(int row, int col) {
+			this.i = row;
+			this.j = col;
+		}
+
+		@Override
+		/*
+		 * When empty box is clicked, do some AI stuff
+		 */
+		public void mouseClicked(MouseEvent e) {
+			JPanel panel = (JPanel) e.getSource();
+			if (panel.getBackground().equals(Color.BLACK)) {
+				System.out.println("You clicked on black");
+			} else if (panel.getBackground().equals(Color.WHITE)) {
+				System.out.println("You clicked on WHITE");
+			} else {
+				// empty box was clicked. Do some stuff
+				playerMadeMove(i, j);
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+		}
+	}
+	
+	private class AI implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if (e.getSource() == btnReset) {
+				reset();
+			}
+		}
 	}
 
 	public static void main(String[] args) {
