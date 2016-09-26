@@ -3,14 +3,15 @@ public class ComMove2 {
 	
 	int depth = 0;
 	final int HUMAN = -1, COM = 1, EMPTY = 0;
-	int rowColIndex;
-	final int DJUP = 2;
+	int rowColIndex, startDjup = 0;
+	final int DJUP = 4;
 	
 	public int alphaBetaSearch(State state) {
+		
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				if(state.getOwner(i, j) == 0) {
-					depth++;
+					startDjup++;
 				}
 			}
 		}
@@ -28,7 +29,7 @@ public class ComMove2 {
 				}
 			}
 		}
-		if(daDepth == DJUP) {
+		if((startDjup - daDepth) > DJUP) {
 			return state.getScore();
 		}
 		int returnValue = Integer.MIN_VALUE;
@@ -49,14 +50,15 @@ public class ComMove2 {
 					if (returnValue >= b) {
 						return returnValue;
 					}
-					a = Math.max(a, returnValue);
-					System.out.println("ALPHA = " + a);
-					// when we set alpha, we know this was the best way. Update
-					// row,col to move
 					if (returnValue > a) {
 						System.out.println("RowColIndex UPDATED");
 						rowColIndex = (i * 4 + j);
 					}
+					a = Math.max(a, returnValue);
+					System.out.println("ALPHA = " + a);
+					// when we set alpha, we know this was the best way. Update
+					// row,col to move
+					
 				}
 			}
 		}
@@ -77,7 +79,7 @@ public class ComMove2 {
 				}
 			}
 		}
-		if(daDepth == DJUP) {
+		if((startDjup - daDepth) > DJUP) {
 			return state.getScore();
 		}
 		
@@ -96,12 +98,13 @@ public class ComMove2 {
 					if (returnValue <= a) {
 						return returnValue;
 					}
-					b = Math.min(b, returnValue);
-					System.out.println("BETA = " + b);
 					if (returnValue < b) {
 						System.out.println("RowColIndex UPDATED");
-//						rowColIndex = (i * 4 + j);
+						rowColIndex = (i * 4 + j);
 					}
+					b = Math.min(b, returnValue);
+					System.out.println("BETA = " + b);
+					
 				}
 			}
 		}
