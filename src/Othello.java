@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -40,6 +41,7 @@ public class Othello extends JPanel {
 	private final int EMPTY = 0, HUMAN = -1, COM = 1;
 	private State state;
 	private int currentPlayer = -1;
+	private ComMove move = new ComMove();
 
 	public Othello() {
 
@@ -141,8 +143,21 @@ public class Othello extends JPanel {
 		checkAllDirections(state, row, col,currentPlayer);
 		render();
 		currentPlayer *= -1;
-		
-
+	}
+	
+	public void comMove() {
+		int index = move.alphaBetaSearch(state);
+		int rowMove = index / 4;
+		int colMove = index%4;
+		checkAllDirections(state, rowMove, colMove,currentPlayer);
+		render();
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				System.out.print(state.getOwner(i, j));
+			}
+			System.out.println();
+		}
+		currentPlayer *= -1;
 	}
 	
 	/**
@@ -175,9 +190,10 @@ public class Othello extends JPanel {
 		int checkRow = placedRow + rowDir;
 		int checkCol = placedCol + colDir;
 		int[][] board = state.getBoard();
-		board[placedRow][placedCol] = player;
 		boolean foundOpponentPiece = false;
 		int pipsToTurn = 0;
+		
+		board[placedRow][placedCol] = player;
 
 		while (checkRow >= 0 && checkCol <= 3 && checkCol >= 0 && checkRow <= 3	&& board[checkRow][checkCol] != 0) {
 			//if found any of same color and found opponent pieces in between
@@ -221,6 +237,7 @@ public class Othello extends JPanel {
 			} else {
 				// empty box was clicked. Do some stuff
 				playerMadeMove(i, j);
+				comMove();
 			}
 		}
 

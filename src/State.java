@@ -1,7 +1,7 @@
 
 public class State {
 	
-	private final int HUMAN = 1,COM = -1;
+	private final int HUMAN = 1,COM = -1, EMPTY = 0;
 	
 	
 	private int[][] board = {{0,0,0,0},
@@ -47,9 +47,8 @@ public class State {
 		return score;
 	}
 	
-	public State updateState(State state, int row, int col ){
-		this.board = state.getBoard();
-		return null;
+	public void updateBoard(int row, int col,int player ){
+		this.board[row][col] = player;
 		
 	}
 	
