@@ -150,14 +150,16 @@ public class Othello extends JPanel {
 		int rowMove = index / 4;
 		int colMove = index%4;
 		checkAllDirections(state, rowMove, colMove,currentPlayer);
+		System.out.println("COM put on row " + rowMove + " Col: " + colMove);
 		render();
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				System.out.print(state.getOwner(i, j));
-			}
-			System.out.println();
-		}
+//		for(int i = 0; i < 4; i++) {
+//			for(int j = 0; j < 4; j++) {
+//				System.out.print(state.getOwner(i, j));
+//			}
+//			System.out.println();
+//		}
 		currentPlayer *= -1;
+		
 	}
 	
 	/**

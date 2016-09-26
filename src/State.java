@@ -1,7 +1,7 @@
 
 public class State {
 	
-	private final int HUMAN = 1,COM = -1, EMPTY = 0;
+	private final int HUMAN = -1,COM = 1, EMPTY = 0;
 	
 	
 	private int[][] board = {{0,0,0,0},
