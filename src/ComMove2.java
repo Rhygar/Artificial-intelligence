@@ -4,15 +4,18 @@ public class ComMove2 {
 	int depth;
 	final int HUMAN = -1, COM = 1, EMPTY = 0;
 	int rowColIndex;
+	int nodesChecked = 0;
 
 	
 	public int alphaBetaSearch(State state) {
-		maxValue(state,6,Integer.MIN_VALUE, Integer.MAX_VALUE);
+		maxValue(state,12,Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+		System.out.println("Nodes checked: " + nodesChecked);
 		return rowColIndex;
 	}
 	
-	public int maxValue(State state,int depth, int a, int b) {
-		int alpha = a, beta = b;
+	public int maxValue(State state,int depth, int a, int b, boolean allowChangeAlpha) {
+		nodesChecked++;
+//		int alpha = a, beta = b;
 		int currentEmptySlot = 0;
 		depth--;
 
@@ -32,7 +35,7 @@ public class ComMove2 {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (state.getOwner(i, j) == 0) {
-					System.out.println("Now checking row: " + i + " Col: " + j);
+//					System.out.println("Now checking row: " + i + " Col: " + j);
 					State tempState = new State();
 					for(int k = 0; k < 4; k++) {
 						for(int m = 0; m < 4; m++) {
@@ -41,17 +44,18 @@ public class ComMove2 {
 					}
 					
 					checkAllDirections(tempState,i,j,COM);
-					returnValue = Math.max(returnValue, minValue(tempState,depth,alpha, beta)); // change new State to call result method
+					returnValue = Math.max(returnValue, minValue(tempState,depth,a, b)); // change new State to call result method
 					if (returnValue >= b) {
 						depth++;
+						System.out.println("Pruning on max");
 						return returnValue;
 					}
-					if (returnValue > a) {
+					if (returnValue > a && allowChangeAlpha) {
 						System.out.println("RowColIndex UPDATED");
 						rowColIndex = (i * 4 + j);
 					}
 					a = Math.max(a, returnValue);
-					System.out.println("ALPHA = " + a);
+//					System.out.println("ALPHA = " + a);
 					// when we set alpha, we know this was the best way. Update
 					// row,col to move
 					
@@ -63,8 +67,8 @@ public class ComMove2 {
 	}
 	
 	public int minValue(State state,int depth, int a, int b) {
-
-		int alpha = a, beta = b;
+		nodesChecked++;
+//		int alpha = a, beta = b;
 		int returnValue = Integer.MAX_VALUE;
 		depth--;
 		int currentEmptySlot = 0;
@@ -89,17 +93,18 @@ public class ComMove2 {
 						}
 					}
 					checkAllDirections(tempState,i,j,HUMAN);
-					returnValue = Math.min(returnValue,maxValue(tempState,depth,alpha, beta)); // change newState to call result method
+					returnValue = Math.min(returnValue,maxValue(tempState,depth,a, b, false)); // change newState to call result method
 					if (returnValue <= a) {
 						depth++;
+						System.out.println("Pruning on min");
 						return returnValue;
 					}
 					if (returnValue < b) {
-						System.out.println("RowColIndex UPDATED");
-						rowColIndex = (i * 4 + j);
+						
+//						rowColIndex = (i * 4 + j);
 					}
 					b = Math.min(b, returnValue);
-					System.out.println("BETA = " + b);
+//					System.out.println("BETA = " + b);
 					
 				}
 			}
