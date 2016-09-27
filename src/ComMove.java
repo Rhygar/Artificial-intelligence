@@ -1,14 +1,13 @@
 import java.util.Arrays;
 
 public class ComMove {
-
 	int rowColIndex;
 	final int HUMAN = -1, COM = 1, EMPTY = 0;
 
 	public int alphaBetaSearch(State state) {
 //		int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
 		State tempState = new State(state.getBoard());
-		int max = maxValue(tempState, 4, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		int max = maxValue(tempState, 8, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		return rowColIndex;
 	}
 

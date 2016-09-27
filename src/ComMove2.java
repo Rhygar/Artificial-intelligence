@@ -1,37 +1,32 @@
 
 public class ComMove2 {
 	
-	int depth = 0;
+	int depth;
 	final int HUMAN = -1, COM = 1, EMPTY = 0;
-	int rowColIndex, startDjup = 0;
-	final int DJUP = 0;
+	int rowColIndex;
+
 	
 	public int alphaBetaSearch(State state) {
-		
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				if(state.getOwner(i, j) == 0) {
-					startDjup++;
-				}
-			}
-		}
-		maxValue(state, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		maxValue(state,6,Integer.MIN_VALUE, Integer.MAX_VALUE);
 		return rowColIndex;
 	}
 	
-	public int maxValue(State state, int a, int b) {
+	public int maxValue(State state,int depth, int a, int b) {
 		int alpha = a, beta = b;
-		int daDepth = 0;
+		int currentEmptySlot = 0;
+		depth--;
+
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				if(state.getOwner(i, j) == 0) {
-					daDepth++;
+					currentEmptySlot++;
 				}
 			}
 		}
-		if((startDjup - daDepth) > DJUP) {
+		if (depth < 1 || currentEmptySlot == 0) {
 			return state.getScore();
 		}
+		
 		int returnValue = Integer.MIN_VALUE;
 		
 		for (int i = 0; i < 4; i++) {
@@ -46,8 +41,9 @@ public class ComMove2 {
 					}
 					
 					checkAllDirections(tempState,i,j,COM);
-					returnValue = Math.max(returnValue, minValue(tempState,alpha, beta)); // change new State to call result method
+					returnValue = Math.max(returnValue, minValue(tempState,depth,alpha, beta)); // change new State to call result method
 					if (returnValue >= b) {
+						depth++;
 						return returnValue;
 					}
 					if (returnValue > a) {
@@ -62,30 +58,29 @@ public class ComMove2 {
 				}
 			}
 		}
-		
-		
-		
+		depth++;
 		return returnValue;
 	}
 	
-	public int minValue(State state, int a, int b) {
-		int daDepth = 0;
+	public int minValue(State state,int depth, int a, int b) {
+
 		int alpha = a, beta = b;
 		int returnValue = Integer.MAX_VALUE;
+		depth--;
+		int currentEmptySlot = 0;
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
 				if(state.getOwner(i, j) == 0) {
-					daDepth++;
+					currentEmptySlot ++;
 				}
 			}
 		}
-		if((startDjup - daDepth) > DJUP) {
+		if (depth < 1 || currentEmptySlot == 0) {
 			return state.getScore();
 		}
 		
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-//				System.out.println("Came to Min Value after for");
 				if (state.getOwner(i, j) == 0) {
 					State tempState = new State();
 					for(int k = 0; k < 4; k++) {
@@ -94,8 +89,9 @@ public class ComMove2 {
 						}
 					}
 					checkAllDirections(tempState,i,j,HUMAN);
-					returnValue = Math.min(returnValue,maxValue(tempState, alpha, beta)); // change newState to call result method
+					returnValue = Math.min(returnValue,maxValue(tempState,depth,alpha, beta)); // change newState to call result method
 					if (returnValue <= a) {
+						depth++;
 						return returnValue;
 					}
 					if (returnValue < b) {
@@ -109,7 +105,7 @@ public class ComMove2 {
 			}
 		}
 		
-		
+		depth++;
 		return returnValue;
 	}
 	
@@ -154,13 +150,6 @@ public class ComMove2 {
 			checkCol += colDir;
 		}
 		state.setBoard(board);
-//		for(int i = 0; i < 4; i++) {
-//			for(int j = 0; j < 4; j++) {
-//				System.out.print(state.getOwner(i, j));
-//			}
-//			System.out.println();
-//		}
-//		System.out.println();
 		return state;
 	}
 
