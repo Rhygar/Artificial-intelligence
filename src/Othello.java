@@ -15,9 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * A game of Othello.
+ * A game of Othello with alpha beta pruning.
+ * This class is mainly GUI and rendering of the board. 
  * 
- * Player = -1 & COM = 1
  * 
  * @author David Tran & John Tengvall
  *
@@ -99,7 +99,7 @@ public class Othello extends JPanel {
 	}
 
 	/**
-	 * This method renders the board with updated view
+	 * This method renders the board with update pieces on board. It also renders the first startboard. 
 	 */
 	public void render() {
 		int humanScore = 0, comScore = 0;
@@ -122,28 +122,35 @@ public class Othello extends JPanel {
 	}
 
 	/**
-	 * This method restarts the game.
+	 * This method resets and restarts the game with a button.
 	 */
 	public void reset() {
 		btnReset.setText("Reset");
 		state = new State();
 		render();
 	}
-
-	public void changeColor(int row, int col) {
-		box[row][col].setBackground(Color.BLACK);
-	}
-
+	/**
+	 * First it takes the row and col and prints out in the console where the human put its move. 
+	 * It will then call the checkAllDirections() function and see if your move flips any of your 
+	 * opponents pieces. Then it calls render() which will render the updated table. 
+	 * It will then change the currentplayer to computer. 
+	 * @param row
+	 * @param col
+	 */
 	public void playerMadeMove(int row, int col) {
-		// panel.setBackground(Color.WHITE);
 		System.out.println("Player put on ROW " + row + " COL " + col);
-//		state = checkBoard(state, row, col, 1, 1, -1);
-//		render();
 		checkAllDirections(state, row, col,currentPlayer);
 		render();
 		currentPlayer *= -1;
 	}
-	
+	/**
+	 * This function is the computers move. First it will call the alphaBetaSearch 
+	 * that will calculate the best move and return an index between 0-15 that represents the place on the board.
+	 * To get the row the function divide index by 4. 
+	 * To get the column it takes the remainder of modulu 4.
+	 * After it got the best move it will check where the other players pieces are and then flip the ones in between computers pieces.
+	 * Then it will render the board and change player. 
+	 */
 	public void comMove() {
 		ComMove move = new ComMove();
 		int index = move.alphaBetaSearch(state);
@@ -152,26 +159,20 @@ public class Othello extends JPanel {
 		checkAllDirections(state, rowMove, colMove,currentPlayer);
 		System.out.println("COM put on row " + rowMove + " Col: " + colMove);
 		render();
-//		for(int i = 0; i < 4; i++) {
-//			for(int j = 0; j < 4; j++) {
-//				System.out.print(state.getOwner(i, j));
-//			}
-//			System.out.println();
-//		}
 		currentPlayer *= -1;
 		
 	}
 	
 	/**
-	 * This method calls checkBoard function to check all 8 possible directions
+	 * This method calls checkBoard function to check all 8 possible directions.
 	 * @param state
 	 * @param placedRow
 	 * @param placedCol
 	 * @param player
 	 */
 	public void checkAllDirections(State state, int placedRow, int placedCol, int player) {
-		int[] dirArray = {0,-1,-1,-1,0,1,1,1,0,-1};
-		for(int i = 0; i < 8; i++) {
+		int[] dirArray = {0,-1,-1,-1,0,1,1,1,0,-1};//checks west,east,north,south and diagonal from the square. 
+		for(int i = 0; i < 8; i++) { //for loop so we see all directions. 
 			checkBoard(state, placedRow, placedCol, dirArray[i], dirArray[i+2],player);
 		}
 	}
@@ -185,21 +186,22 @@ public class Othello extends JPanel {
 	 * @param rowDir 
 	 * @param colDir
 	 * @param player
-	 * @return
+	 * @return state
 	 */
 	public State checkBoard(State state, int placedRow, int placedCol, int rowDir, int colDir, int player) {
-
-		int checkRow = placedRow + rowDir;
+		int checkRow = placedRow + rowDir; 
 		int checkCol = placedCol + colDir;
 		int[][] board = state.getBoard();
 		boolean foundOpponentPiece = false;
 		int pipsToTurn = 0;
 		
 		board[placedRow][placedCol] = player;
-
+		//Check if we are still looking inside the board. Also if found an empty square, no need to search more,
+		//because not possible to turn any pieces.
 		while (checkRow >= 0 && checkCol <= 3 && checkCol >= 0 && checkRow <= 3	&& board[checkRow][checkCol] != 0) {
 			//if found any of same color and found opponent pieces in between
 			if (board[checkRow][checkCol] == player && foundOpponentPiece) {
+				//turn pieces in between 
 				for (int i = 1; i <= pipsToTurn; i++) {
 					board[checkRow - i * rowDir][checkCol - i * colDir] = player;
 				}
@@ -226,10 +228,6 @@ public class Othello extends JPanel {
 			this.j = col;
 		}
 
-		@Override
-		/*
-		 * When empty box is clicked, do some AI stuff
-		 */
 		public void mouseClicked(MouseEvent e) {
 			JPanel panel = (JPanel) e.getSource();
 			if (panel.getBackground().equals(Color.BLACK)) {
@@ -237,47 +235,40 @@ public class Othello extends JPanel {
 			} else if (panel.getBackground().equals(Color.WHITE)) {
 				System.out.println("You clicked on WHITE");
 			} else {
-				// empty box was clicked. Do some stuff
 				playerMadeMove(i, j);
 				comMove();
 			}
 		}
 
-		@Override
 		public void mousePressed(MouseEvent e) {
 		}
 
-		@Override
 		public void mouseReleased(MouseEvent e) {
 		}
 
-		@Override
 		public void mouseEntered(MouseEvent e) {
 		}
 
-		@Override
 		public void mouseExited(MouseEvent e) {
 		}
 	}
-	
+
 	private class AI implements ActionListener {
-		@Override
+		
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			if (e.getSource() == btnReset) {
 				reset();
 			}
 		}
 	}
-
+	/**
+	 * Where the program starts. 
+	 */
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Othello");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		// frame.setBounds(50, 50, 500, 200); //placering och storlek på skärmen
 		frame.setLocation(50, 50);
-		// frame.setSize(500, 200);
-		// frame.setResizable(false);
 		frame.add(new Othello());
 		frame.pack();
 
