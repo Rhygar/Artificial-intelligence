@@ -1,3 +1,8 @@
+/**
+ * This class contains 
+ * @author David
+ *
+ */
 
 public class State {
 	
