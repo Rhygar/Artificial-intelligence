@@ -145,7 +145,7 @@ public class Othello extends JPanel {
 	}
 	
 	public void comMove() {
-		ComMove2 move = new ComMove2();
+		ComMove move = new ComMove();
 		int index = move.alphaBetaSearch(state);
 		int rowMove = index / 4;
 		int colMove = index%4;

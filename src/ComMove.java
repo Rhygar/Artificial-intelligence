@@ -1,113 +1,106 @@
-import java.util.Arrays;
 
 public class ComMove {
-	int rowColIndex;
+	
+	int depth;
 	final int HUMAN = -1, COM = 1, EMPTY = 0;
+	int rowColIndex;
+	int nodesChecked = 0;
 
+	
 	public int alphaBetaSearch(State state) {
-//		int alpha = Integer.MIN_VALUE, beta = Integer.MAX_VALUE;
-		State tempState = new State(state.getBoard());
-		int max = maxValue(tempState, 8, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		maxValue(state,8,Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+		System.out.println("Nodes checked: " + nodesChecked);
 		return rowColIndex;
 	}
-
-	public int maxValue(State state, int depth, int a, int b) {
-		int alpha = a, beta = b;
+	
+	public int maxValue(State state,int depth, int a, int b, boolean allowChangeAlpha) {
+		nodesChecked++;
+		int currentEmptySlot = 0;
 		depth--;
-		// IF TERMINAL TEST bla bla bla
-		System.out.println("Came to MaXValue function");
-		if (depth < 1) {
-			return state.getScore();
-		}
-//		State tempState = new State(state.getBoard().clone());
-		int returnValue = Integer.MIN_VALUE;
-		
-		// check all possible moves - where there are zeroes
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (state.getOwner(i, j) == 0) {
-					State tempState = new State();
-					for(int k = 0; k < 4; k++) {
-						for(int m = 0; m < 4; m++) {
-							tempState.updateBoard(k, m, state.getOwner(k, m));
-						}
-					}
-					checkAllDirections(tempState,i,j,COM);
-					returnValue = Math.max(
-							returnValue, minValue(tempState, depth, alpha, beta)); // change new State to call result method
-					if (returnValue >= b) {
-						return returnValue;
-					}
-					a = Math.max(a, returnValue);
-					System.out.println("ALPHA = " + alpha);
-					// when we set alpha, we know this was the best way. Update
-					// row,col to move
-					if (returnValue > a) {
-						System.out.println("RowColIndex UPDATED");
-						rowColIndex = (i * 4 + j);
-					}
+
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				if(state.getOwner(i, j) == 0) {
+					currentEmptySlot++;
 				}
 			}
 		}
-
-		return returnValue;
-	}
-
-	public int minValue(State state, int depth, int a, int b) {
-		int alpha = a, beta = b;
-		depth--;
-		System.out.println("Came to Min Value function");
-		// IF TERMINAL TEST bla bla bla
-		if (depth < 1) {
+		if (depth < 1 || currentEmptySlot == 0) {
 			return state.getScore();
 		}
-//		State tempState = new State(state.getBoard().clone());
-		int returnValue = Integer.MAX_VALUE;
-		// check all possible moves - where there are zeroes
+		int returnValue = Integer.MIN_VALUE;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				System.out.println("Came to Min Value after for");
 				if (state.getOwner(i, j) == 0) {
-					State tempState = new State();
-					for(int k = 0; k < 4; k++) {
-						for(int m = 0; m < 4; m++) {
-							tempState.updateBoard(k, m, state.getOwner(k, m));
-						}
+					State tempState = getNewState(state,i,j,COM);
+					returnValue = Math.max(returnValue, minValue(tempState,depth,a, b)); // change new State to call result method
+					if (returnValue >= b) {
+						depth++;
+						System.out.println("Pruning on max");
+						return returnValue;
 					}
-					checkAllDirections(tempState,i,j,HUMAN);
-					returnValue = Math.min(
-							returnValue,
-							maxValue(tempState,depth, alpha, beta)); // change newState to call result method
+					if (returnValue > a && allowChangeAlpha) {
+						System.out.println("RowColIndex UPDATED");
+						rowColIndex = (i * 4 + j);
+					}
+					a = Math.max(a, returnValue);
+				}
+			}
+		}
+		depth++;
+		return returnValue;
+	}
+	
+	public int minValue(State state,int depth, int a, int b) {
+		nodesChecked++;
+		int returnValue = Integer.MAX_VALUE;
+		depth--;
+		int currentEmptySlot = 0;
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				if(state.getOwner(i, j) == 0) {
+					currentEmptySlot ++;
+				}
+			}
+		}
+		if (depth < 1 || currentEmptySlot == 0) {
+			return state.getScore();
+		}
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (state.getOwner(i, j) == 0) {
+					State tempState = getNewState(state,i,j,HUMAN);
+					returnValue = Math.min(returnValue,maxValue(tempState,depth,a, b, false)); // change newState to call result method
 					if (returnValue <= a) {
+						depth++;
+						System.out.println("Pruning on min");
 						return returnValue;
 					}
 					b = Math.min(b, returnValue);
-					System.out.println("BETA = " + beta);
-					if (returnValue < b) {
-						System.out.println("RowColIndex UPDATED");
-						rowColIndex = (i * 4 + j);
-					}
 				}
 			}
 		}
-
+		depth++;
 		return returnValue;
 	}
-
-	public static State checkAllDirections(State state, int placedRow, int placedCol,
-			int player) {
+	
+	public static State getNewState(State state, int placedRow, int placedCol, int player) {
+		State tempState = new State();
+		for(int k = 0; k < 4; k++) {
+			for(int m = 0; m < 4; m++) {
+				tempState.updateBoard(k, m, state.getOwner(k, m));
+			}
+		}
+		
 		int[] dirArray = { 0, -1, -1, -1, 0, 1, 1, 1, 0, -1 };
-		int[][] tempBoard = state.getBoard().clone();
-		State tempState = new State(tempBoard);
 		for (int i = 0; i < 8; i++) {
-			tempState = checkBoard(tempState, placedRow, placedCol, dirArray[i],
-					dirArray[i + 2], player);
+			checkBoard(tempState, placedRow, placedCol, dirArray[i], dirArray[i + 2], player);
 		}
 		return tempState;
 	}
 
-	public static State checkBoard(State state, int placedRow, int placedCol,
-			int rowDir, int colDir, int player) {
+	public static State checkBoard(State state, int placedRow, int placedCol, int rowDir, int colDir, int player) {
 
 		int checkRow = placedRow + rowDir;
 		int checkCol = placedCol + colDir;
@@ -137,47 +130,7 @@ public class ComMove {
 			checkCol += colDir;
 		}
 		state.setBoard(board);
-//		for(int i = 0; i < 4; i++) {
-//			for(int j = 0; j < 4; j++) {
-//				System.out.print(state.getOwner(i, j));
-//			}
-//			System.out.println();
-//		}
-//		System.out.println();
 		return state;
-	}
-	
-	public static void main(String[] args) {
-		int[][] testBoard = {{0,0,0,0},
-							 {0,-1,1,0},
-							 {0,1,-1,0},
-							 {0,0,0,0}
-		};
-		State state = new State(testBoard);
-		
-		State newState = new State();
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				newState.updateBoard(i, j, state.getOwner(i, j));
-			}
-		}
-		
-		
-				
-		checkAllDirections(newState, 1,0,1);
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				System.out.print(newState.getOwner(i, j));
-			}
-			System.out.println();
-		}
-		System.out.println();
-		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j < 4; j++) {
-				System.out.print(state.getOwner(i, j));
-			}
-			System.out.println();
-		}
 	}
 
 }
