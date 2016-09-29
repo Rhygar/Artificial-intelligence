@@ -8,7 +8,7 @@
  */
 public class ComMove {
 	
-	private int depth, rowColIndex, nodesChecked = 0;
+	private int depth, rowColIndex, nodesChecked = 0, currentMaxDepth = 0;
 	final int HUMAN = -1, COM = 1, EMPTY = 0, DEPTH = 8;
 
 	/**
@@ -18,15 +18,17 @@ public class ComMove {
 	 * and 15 is the lower right, numerated from left to right.  
 	 */
 	public int alphaBetaSearch(State state) {
-		maxValue(state,DEPTH,Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+		maxValue(state,0,Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 		System.out.println("Nodes checked: " + nodesChecked);
+		System.out.println("Depth search: " + currentMaxDepth);
 		return rowColIndex;
 	}
 	
 	public int maxValue(State state,int depth, int a, int b, boolean allowChangeAlpha) {
 		nodesChecked++;
 		int currentEmptySlot = 0;
-		depth--;
+		depth++;
+		currentMaxDepth = Math.max(currentMaxDepth, depth);
 		
 		//Count how many zeroes on the board. If result is 0, then a leafnode is reached
 		for(int i = 0; i < 4; i++) {
@@ -38,7 +40,7 @@ public class ComMove {
 		}
 		
 		//check if a leaf node is reached or depth limit reached
-		if (depth < 1 || currentEmptySlot == 0) {
+		if (depth == DEPTH || currentEmptySlot == 0) {
 			return state.getScore();
 		}
 		int returnValue = Integer.MIN_VALUE;
@@ -51,7 +53,7 @@ public class ComMove {
 					//if returnvalue is larger than beta, no need to search more, prune
 					if (returnValue >= b) {
 						//increase depth when going up to parent
-						depth++;
+						depth--;
 						System.out.println("Pruning on max");
 						return returnValue;
 					}
@@ -66,7 +68,7 @@ public class ComMove {
 			}
 		}
 		//increase depth when going up to parent
-		depth++;
+		depth--;
 		return returnValue;
 	}
 	
@@ -77,7 +79,8 @@ public class ComMove {
 	public int minValue(State state,int depth, int a, int b) {
 		nodesChecked++;
 		int returnValue = Integer.MAX_VALUE;
-		depth--;
+		depth++;
+		currentMaxDepth = Math.max(currentMaxDepth, depth);
 		int currentEmptySlot = 0;
 		for(int i = 0; i < 4; i++) {
 			for(int j = 0; j < 4; j++) {
@@ -86,7 +89,7 @@ public class ComMove {
 				}
 			}
 		}
-		if (depth < 1 || currentEmptySlot == 0) {
+		if (depth == DEPTH || currentEmptySlot == 0) {
 			return state.getScore();
 		}
 		for (int i = 0; i < 4; i++) {
@@ -96,7 +99,7 @@ public class ComMove {
 					returnValue = Math.min(returnValue,maxValue(tempState,depth,a, b, false)); // change newState to call result method
 					//if returnvalue is larger than beta, no need to search more, prune
 					if (returnValue <= a) {
-						depth++;
+						depth--;
 						System.out.println("Pruning on min");
 						return returnValue;
 					}
@@ -104,7 +107,7 @@ public class ComMove {
 				}
 			}
 		}
-		depth++;
+		depth--;
 		return returnValue;
 	}
 	
