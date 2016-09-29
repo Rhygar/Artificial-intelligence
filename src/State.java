@@ -3,7 +3,7 @@
  * It consists of a board represented by a two dimensional int array
  * where -1 represents a human piece and +1 represents computer piece. 0 means empty square
  * @author David Tran & John Tengvall
- * date: 28-09-2016
+ * @date 28-09-2016
  */
 
 public class State {

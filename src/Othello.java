@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,11 +14,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * A game of Othello with alpha beta pruning.
- * This class is mainly GUI and rendering of the board. 
+ * With this game it is possible to play the board game Othello against a computer. 
+ * The computer, or agent, is using alpha-beta pruning search algorithm to determine 
+ * its next move. Because it can calculate possible outcomes in near future, it is very hard 
+ * for human, if not impossible, to win against this agent.
  * 
+ * The board is 4x4, and one can place a piece on whichever empty square.  
  * 
  * @author David Tran & John Tengvall
+ * @date 28-09-2016
  *
  */
 public class Othello extends JPanel {
@@ -89,7 +92,7 @@ public class Othello extends JPanel {
 	}
 
 	/**
-	 * This method renders the board with update pieces on board. It also renders the first startboard. 
+	 * This method renders the board of the current state. It also sets the score displayed in labels in GUI.  
 	 */
 	public void render() {
 		int humanScore = 0, comScore = 0;
@@ -124,8 +127,8 @@ public class Othello extends JPanel {
 	 * It will then call the checkAllDirections() function and see if your move flips any of your 
 	 * opponents pieces. Then it calls render() which will render the updated table. 
 	 * It will then change the currentplayer to computer. 
-	 * @param row
-	 * @param col
+	 * @param row row of the placed piece
+	 * @param col column of the placed piece
 	 */
 	public void playerMadeMove(int row, int col) {
 		System.out.println("Player put on ROW " + row + " COL " + col);
@@ -155,10 +158,10 @@ public class Othello extends JPanel {
 	
 	/**
 	 * This method calls checkBoard function to check all 8 possible directions.
-	 * @param state
-	 * @param placedRow
-	 * @param placedCol
-	 * @param player
+	 * @param state current state and board
+	 * @param placedRow row of the placed piece
+	 * @param placedCol column of the placed piece
+	 * @param player which player who places the piece, -1 human, 1 computer
 	 */
 	public void checkAllDirections(State state, int placedRow, int placedCol, int player) {
 		int[] dirArray = {0,-1,-1,-1,0,1,1,1,0,-1};//checks west,east,north,south and diagonal from the square. 
@@ -173,10 +176,10 @@ public class Othello extends JPanel {
 	 * @param state The current state 
 	 * @param placedRow Row of the placed piece
 	 * @param placedCol Column of the placed piece
-	 * @param rowDir 
-	 * @param colDir
-	 * @param player
-	 * @return state
+	 * @param rowDir direction of row, -1 is up, 1 is down, 0 same row
+	 * @param colDir direction of column, -1 is left, 1 is right, 0 same column	
+	 * @param player which player who places the piece, -1 human, 1 computer
+	 * @return state current state and board
 	 */
 	public State checkBoard(State state, int placedRow, int placedCol, int rowDir, int colDir, int player) {
 		int checkRow = placedRow + rowDir; 

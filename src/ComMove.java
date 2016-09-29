@@ -8,7 +8,7 @@
  */
 public class ComMove {
 	
-	private int depth, rowColIndex, nodesChecked = 0, currentMaxDepth = 0;
+	private int rowColIndex, nodesChecked = 0, currentMaxDepth = 0;
 	final int HUMAN = -1, COM = 1, EMPTY = 0, DEPTH = 8;
 
 	/**
@@ -141,14 +141,14 @@ public class ComMove {
 
 	/**
 	 * This method places the new piece on the board and checks if any pieces will turn in this specific direction. 
-	 * It then returns a new state with the new board  
+	 * It then returns a new state with the new board, but also manipulates the state which is received as argument.   
 	 * @param state The current state 
 	 * @param placedRow Row of the placed piece
 	 * @param placedCol Column of the placed piece
 	 * @param rowDir direction of row, -1 is up, 1 is down, 0 same row
 	 * @param colDir direction of column, -1 is left, 1 is right, 0 same column	
 	 * @param player which player who places the piece, -1 human, 1 computer
-	 * @return
+	 * @return the updated state
 	 */
 	public static State checkBoard(State state, int placedRow, int placedCol, int rowDir, int colDir, int player) {
 
