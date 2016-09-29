@@ -50,20 +50,14 @@ public class Othello extends JPanel {
 		// Panel center
 		pnlCenter.setLayout(new GridLayout(4, 4, 2, 2));
 		pnlCenter.setBackground(new Color(0x0066cc));
-
 		// Panel East
 		pnlEast.setLayout(new BorderLayout());
 		pnlEast.setBackground(Color.GREEN);
 		pnlEast.setPreferredSize(new Dimension(200, 400));
-
 		// Panel East North. Contaning OTHELLO label
 		pnlEastNorth.setPreferredSize(new Dimension(200, 100));
-		// pnlEastNorth.setBackground(Color.GRAY);
-
 		// Panel East South. Containg RESET-button
 		pnlEastSouth.setPreferredSize(new Dimension(200, 100));
-		// pnlEastSouth.setBackground(Color.GRAY);
-
 		// Panel East Center. Containing Scores
 		pnlEastCenter.setLayout(new GridLayout(2, 2));
 		imagePlayer = new ImageIcon("src/BlackCircle.png");
@@ -75,10 +69,8 @@ public class Othello extends JPanel {
 		pnlEastCenter.add(jblImageCom);
 		pnlEastCenter.add(lblComScore);
 
-		// ResetButton
-		btnReset.addActionListener(new AI());
+		btnReset.addActionListener(new AI());//resetbutton
 		pnlEastSouth.add(btnReset);
-
 		// adding to Panels
 		pnlEast.add(pnlEastNorth, BorderLayout.NORTH);
 		pnlEast.add(pnlEastSouth, BorderLayout.SOUTH);
@@ -88,9 +80,7 @@ public class Othello extends JPanel {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				box[i][j] = new JPanel();
-				box[i][j].addMouseListener(new ML(i, j)); // adding
-															// mouselistener to
-															// each panel
+				box[i][j].addMouseListener(new ML(i, j)); // adding mouselistener to each panel so it's clickable
 				pnlCenter.add(box[i][j]);
 			}
 		}
@@ -105,14 +95,14 @@ public class Othello extends JPanel {
 		int humanScore = 0, comScore = 0;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				if (state.getOwner(i, j) == EMPTY) {
+				if (state.getOwner(i, j) == EMPTY) { //If the square is empty, set it to green color
 					box[i][j].setBackground(new Color(00, 99, 33));
-				} else if (state.getOwner(i, j) == HUMAN) {
+				} else if (state.getOwner(i, j) == HUMAN) {//if the square is the humans square, set it to black
 					box[i][j].setBackground(Color.BLACK);
-					humanScore++;
+					humanScore++; //human score gets higher after each change
 				} else {
-					box[i][j].setBackground(Color.WHITE);
-					comScore++;
+					box[i][j].setBackground(Color.WHITE); //if the square is computers square, set it to white. 
+					comScore++; //computer score gets higher
 				}
 			}
 		}
